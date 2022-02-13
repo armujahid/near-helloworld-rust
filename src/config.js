@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME ||'near-helloworld-rust'
+const CONTRACT_NAME = process.env.CONTRACT_NAME ||'helloworld.abdulrauf.testnet'
 
 function getConfig(env) {
   switch (env) {
