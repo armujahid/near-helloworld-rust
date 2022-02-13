@@ -36,23 +36,24 @@ impl Default for Welcome {
 
 #[near_bindgen]
 impl Welcome {
-    pub fn set_greeting(&mut self, message: String) {
-        let account_id = env::signer_account_id();
+    // pub fn set_greeting(&mut self, message: String) {
+    //     let account_id = env::signer_account_id();
 
-        // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id,).as_bytes());
+    //     // Use env::log to record logs permanently to the blockchain!
+    //     env::log(format!("Saving greeting '{}' for account '{}'", message, account_id,).as_bytes());
 
-        self.records.insert(&account_id, &message);
-    }
+    //     self.records.insert(&account_id, &message);
+    // }
 
     // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
     // self.records.get(&account_id) is not yet defined.
     // Learn more: https://doc.rust-lang.org/book/ch06-02-match.html#matching-with-optiont
-    pub fn get_greeting(&self, account_id: String) -> String {
-        match self.records.get(&account_id) {
-            Some(greeting) => greeting,
-            None => "Hello".to_string(),
-        }
+    pub fn say_hello(&self, name: String) -> String {
+        format!("Hello {}!", name)
+    }
+
+    pub fn say(&self, name: String, greeting: String) -> String {
+        format!("{} {}!", greeting, name)
     }
 }
 
@@ -96,14 +97,13 @@ mod tests {
     }
 
     #[test]
-    fn set_then_get_greeting() {
+    fn get_custom_greeting() {
         let context = get_context(vec![], false);
         testing_env!(context);
-        let mut contract = Welcome::default();
-        contract.set_greeting("howdy".to_string());
+        let contract = Welcome::default();
         assert_eq!(
-            "howdy".to_string(),
-            contract.get_greeting("bob_near".to_string())
+            "Custom Greeting Abdul Rauf!".to_string(),
+            contract.say("Abdul Rauf".to_string(), "Custom Greeting".to_string())
         );
     }
 
@@ -114,8 +114,8 @@ mod tests {
         let contract = Welcome::default();
         // this test did not call set_greeting so should return the default "Hello" greeting
         assert_eq!(
-            "Hello".to_string(),
-            contract.get_greeting("francis.near".to_string())
+            "Hello Abdul Rauf!".to_string(),
+            contract.say_hello("Abdul Rauf".to_string())
         );
     }
 }
